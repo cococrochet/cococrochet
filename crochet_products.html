@@ -518,29 +518,77 @@ footer {
 @media(max-width:768px) {
 
   nav {
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    background: #f7e9df;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    width: 100%;
-    padding: 15px 0;
-    z-index: 1000;
-  }
-
-  nav.active {
     display: flex;
-  }
+  justify-content: center;
+  gap: 35px;
+  background: #faefe4;
+  padding: 14px 0;
+  border-bottom: 2px solid #e6d1c3;
+}
+
+nav a {
+  color: #4a3a2d;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  position: relative;
+}
+nav a::after {
+  content: "";
+  width: 0;
+  height: 2px;
+  background: #d4af37;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  transition: 0.3s ease;
+}
+nav a:hover::after {
+  width: 100%;
+}
 
   .menu-toggle {
     display: block;
   }
 
+
+
   .product-grid {
-    padding: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px; /* reduce spacing */
+    padding: 15px;
   }
+
+  /* product card size */
+  .product {
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  /* images size */
+  .product img {
+    border-radius: 8px;
+    height: 120px;     /* control height */
+    object-fit: cover; /* keeps image clean */
+  }
+
+  /* product text */
+  .product h3 {
+    font-size: 14px;
+    margin: 8px 0 4px;
+  }
+
+  .product p {
+    font-size: 13px;
+  }
+
+  /* button size */
+  .buy-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
 }
 
 </style>
@@ -549,6 +597,8 @@ footer {
 
 <div id="header"></div>
 <div id="nav"></div>
+
+<div id="mobileMenu"></div>
 
 <div id="cartDrawer" class="cart-drawer">
   <span class="cart-drawer-close" onclick="toggleCart()">×</span>
@@ -623,7 +673,10 @@ let currentSlide = 0;
 let modalProduct = null;
 
 
-function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+function toggleMenu() { 
+  document.getElementById('mobileMenu').classList.toggle('active'); 
+}
+
 function toggleCart() { document.getElementById('cartDrawer').classList.toggle('open'); }
 
 function addToCartWithQty(event, button) {
