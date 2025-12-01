@@ -79,6 +79,49 @@ nav a:hover::after {
   width: 100%;
 }
 
+/* MOBILE — adjust product size */
+@media(max-width: 600px) {
+
+  /* 2 products per row */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+    padding: 15px !important;
+  }
+
+  /* product card */
+  .product {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+
+  /* product images */
+  .product img {
+    width: 100% !important;
+    height: 120px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    display: block !important;
+  }
+
+  /* product name */
+  .product h3 {
+    font-size: 14px !important;
+    margin: 8px 0 4px !important;
+  }
+
+  /* price text */
+  .product p {
+    font-size: 13px !important;
+  }
+
+  /* button */
+  .buy-btn {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    border-radius: 8px !important;
+  }
+}
 
 
 /* =====================================================
