@@ -39,7 +39,14 @@
     "price": 250,
     "image": "product_images/teddy.png",
     "code": "AMG001"
+  },
+  {
+    "name": "Christmas Hat Keychain",
+    "price": 59,
+    "image": "product_images/santaclaus.png",
+    "code": "BAG002"
   }
   
 ]
+
 
