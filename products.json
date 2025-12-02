@@ -29,10 +29,17 @@
     "code": "TOP002"
   },
   {
-    "name": "Crochet Bag",
+    "name": "Sunflower Keychain",
     "price": 149,
     "image": "product_images/sunflower.png",
     "code": "BAG002"
+  },
+  {
+    "name": "Mr. Bean doll(teddy)",
+    "price": 250,
+    "image": "product_images/teddy.png",
+    "code": "AMG001"
   }
   
 ]
+
