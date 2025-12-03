@@ -45,9 +45,17 @@
     "price": 59,
     "image": "product_images/santaclaus.webp",
     "code": "BAG002"
+  },
+  {
+    "name": "Bubble Pouch",
+    "price": 699,
+    "image": "product_images/bubblepouch.webp",
+    "code": "BAG002"
   }
   
+  
 ]
+
 
 
 
