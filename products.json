@@ -3,7 +3,8 @@
     "name": "Watermelon Keychain",
     "price": 199,
     "image": "product_images/watermelon.webp",
-    "code": "BAG001",
+    "code": "KEY001",
+    "category": "Fruits",
     "description": [
     "Handmade with premium yarn",
     "Perfect for gifting",
@@ -14,47 +15,59 @@
     "name": "Bow Keychain",
     "price": 159,
     "image": "product_images/bow.webp",
-    "code": "PLU001"
+    "code": "KEY002",
+    "category": "Fruits",
+    "description": ["Colour, size and design customizable"]
   },
   {
     "name": "Flower Keychain",
        "price": 199,
     "image": "product_images/flower1.webp",
-    "code": "TOP001"
+    "code": "KEY003",
+    "category": "Fruits",
+     "description": ["Colour, size and design customizable"]
   },
   {
     "name": "Jellyfish Keychain",
     "price": 149,
     "image": "product_images/jellyfish.webp",
-    "code": "TOP002"
+    "code": "KEY004",
+     "description": ["Colour, size and design customizable"]
   },
   {
     "name": "Sunflower Keychain",
     "price": 149,
     "image": "product_images/sunflower.webp",
-    "code": "BAG002"
+    "code": "KEY005",
+     "description": ["Colour, size and design customizable"]
   },
   {
     "name": "Mr. Bean doll(teddy)",
     "price": 250,
     "image": "product_images/teddy.webp",
-    "code": "AMG001"
+    "code": "DOL001",
+     "description": ["Colour, size and design customizable"]
   },
   {
     "name": "Christmas Hat Keychain",
     "price": 59,
     "image": "product_images/santaclaus.webp",
-    "code": "BAG002"
+    "code": "KEY006",
+    "category": "Fruits",
+     "description": ["Colour, size and design customizable"]
   },
   {
     "name": "Bubble Pouch",
-    "price": 699,
+    "price": 799,
     "image": "product_images/bubblepouch.webp",
-    "code": "BAG002"
+    "code": "BAG001",
+    "category": "Fruits",
+     "description": ["Colour, size and design customizable"]
   }
   
   
 ]
+
 
 
 
