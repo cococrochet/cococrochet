@@ -2,7 +2,7 @@
   {
     "name": "Watermelon Keychain",
     "price": 199,
-    "image": "product_images/watermelon.png",
+    "image": "product_images/watermelon.webp",
     "code": "BAG001",
     "description": [
     "Handmade with premium yarn",
@@ -13,40 +13,41 @@
   {
     "name": "Bow Keychain",
     "price": 159,
-    "image": "product_images/bow.png",
+    "image": "product_images/bow.webp",
     "code": "PLU001"
   },
   {
     "name": "Flower Keychain",
        "price": 199,
-    "image": "product_images/flower1.png",
+    "image": "product_images/flower1.webp",
     "code": "TOP001"
   },
   {
     "name": "Jellyfish Keychain",
     "price": 149,
-    "image": "product_images/jellyfish.png",
+    "image": "product_images/jellyfish.webp",
     "code": "TOP002"
   },
   {
     "name": "Sunflower Keychain",
     "price": 149,
-    "image": "product_images/sunflower.png",
+    "image": "product_images/sunflower.webp",
     "code": "BAG002"
   },
   {
     "name": "Mr. Bean doll(teddy)",
     "price": 250,
-    "image": "product_images/teddy.png",
+    "image": "product_images/teddy.webp",
     "code": "AMG001"
   },
   {
     "name": "Christmas Hat Keychain",
     "price": 59,
-    "image": "product_images/santaclaus.png",
+    "image": "product_images/santaclaus.webp",
     "code": "BAG002"
   }
   
 ]
+
 
 
