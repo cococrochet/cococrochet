@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CocoCrochet</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff8f3, #f8e9d8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #3b2b22;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 2px solid #f1e2d6;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #d4af37;
+        }
+
+        input {
+            width: 100%;
+            display: block;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #d4af37;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #b89530;
+        }
+
+        .toggle-link {
+            color: #c2896b;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 15px;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <h1 id="title">Sign In</h1>
+
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+
+        <button id="actionBtn" onclick="handleAuth()">Sign In</button>
+
+        <div id="forgotPasswordLink" style="text-align: right; margin-top: 5px;">
+            <span onclick="resetPassword()"
+                style="color: #666; font-size: 12px; cursor: pointer; text-decoration: underline;">Forgot
+                Password?</span>
+        </div>
+
+        <div id="message"></div>
+
+        <span class="toggle-link" onclick="toggleMode()" id="toggleText">New here? Create an account</span>
+
+        <a href="crochet_products.html" class="back-link">← Back to Shop</a>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://ggqbvmssddvskxunwlis.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncWJ2bXNzZGR2c2t4dW53bGlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwOTAzODUsImV4cCI6MjA4MDY2NjM4NX0.-MkxoSsER65PpKWfPhXazacTd_hhUY1Hr-kzyG-4fbQ';
+        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let isSignUp = false;
+
+        function toggleMode() {
+            isSignUp = !isSignUp;
+            document.getElementById('title').innerText = isSignUp ? "Create Account" : "Sign In";
+            document.getElementById('actionBtn').innerText = isSignUp ? "Sign Up" : "Sign In";
+            document.getElementById('toggleText').innerText = isSignUp ? "Already have an account? Sign In" : "New here? Create an account";
+            document.getElementById('message').innerText = "";
+        }
+
+        async function handleAuth() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('message');
+
+            if (!email || !password) {
+                msg.innerText = "Please enter both email and password.";
+                msg.style.color = "red";
+                return;
+            }
+
+            msg.innerText = "Processing...";
+            msg.style.color = "#888";
+
+            let result;
+            if (isSignUp) {
+                result = await client.auth.signUp({ email, password });
+            } else {
+                result = await client.auth.signInWithPassword({ email, password });
+            }
+
+            const { data, error } = result;
+
+            if (error) {
+                msg.innerText = error.message;
+                msg.style.color = "red";
+            } else {
+                if (isSignUp && !data.session) {
+                    // SignUp successful but maybe check email is required, though usually immediate for anon
+                    msg.innerText = "Account created! You can now sign in.";
+                    msg.style.color = "green";
+                    toggleMode();
+                } else {
+                    // Login successful (or auto-login after signup)
+                    msg.innerText = "Success! Redirecting...";
+                    msg.style.color = "green";
+                    setTimeout(() => window.location.href = "crochet_products.html", 1000);
+                }
+            }
+        }
+
+        async function resetPassword() {
+            const email = document.getElementById('email').value;
+            const msg = document.getElementById('message');
+
+            if (!email) {
+                msg.innerText = "Please enter your email address first.";
+                msg.style.color = "red";
+                return;
+            }
+
+            msg.innerText = "Sending reset link...";
+            msg.style.color = "#888";
+
+            const { data, error } = await client.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/my_orders.html',
+            });
+
+            if (error) {
+                msg.innerText = error.message;
+                msg.style.color = "red";
+            } else {
+                msg.innerText = "Check your email for the password reset link!";
+                msg.style.color = "green";
+            }
+        }
+    </script>
+
+</body>
+
+</html>

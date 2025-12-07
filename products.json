@@ -1,0 +1,104 @@
+[
+  {
+    "name": "Watermelon Keychain",
+    "price": 199,
+    "image": "product_images/watermelon.webp",
+    "code": "KEY001",
+    "category": [
+      "Keychain",
+      "Fruits"
+    ],
+    "description": [
+      "Handmade with premium yarn",
+      "Perfect for gifting",
+      "Soft and cuddly"
+    ]
+  },
+  {
+    "name": "Bow Keychain",
+    "price": 159,
+    "image": "product_images/bow.webp",
+    "code": "KEY002",
+    "category": [
+      "Keychain"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  },
+  {
+    "name": "Flower Keychain",
+    "price": 199,
+    "image": "product_images/flower1.webp",
+    "code": "KEY003",
+    "category": [
+      "Keychain",
+      "Flowers"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  },
+  {
+    "name": "Jellyfish Keychain",
+    "price": 149,
+    "image": "product_images/jellyfish.webp",
+    "code": "KEY004",
+    "category": [
+      "Keychain"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  },
+  {
+    "name": "Sunflower Keychain",
+    "price": 149,
+    "image": "product_images/sunflower.webp",
+    "code": "KEY005",
+    "category": [
+      "Keychain",
+      "Flowers"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  },
+  {
+    "name": "Mr. Bean doll(teddy)",
+    "price": 250,
+    "image": "product_images/teddy.webp",
+    "code": "DOL001",
+    "category": [
+      "Dolls"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  },
+  {
+    "name": "Christmas Hat Keychain",
+    "price": 59,
+    "image": "product_images/santaclaus.webp",
+    "code": "KEY006",
+    "category": [
+      "Keychain",
+      "Christmas"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  },
+  {
+    "name": "Bubble Pouch",
+    "price": 799,
+    "image": "product_images/bubblepouch.webp",
+    "code": "BAG001",
+    "category": [
+      "Bags"
+    ],
+    "description": [
+      "Colour, size and design customizable"
+    ]
+  }
+]

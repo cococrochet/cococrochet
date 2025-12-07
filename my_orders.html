@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - CocoCrochet</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fff8f3, #f8e9d8);
+            margin: 0;
+            padding: 0;
+            color: #3b2b22;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d4af37;
+            border-bottom: 2px solid #e6d1c3;
+            padding-bottom: 15px;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #f1e2d6;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-Pending {
+            background: #ffeeba;
+            color: #856404;
+        }
+
+        .status-VerificationPending {
+            background: #ffd8a8;
+            color: #8a4b00;
+        }
+
+        .status-UnderPreparation {
+            background: #ffecb3;
+            color: #795548;
+        }
+
+        .status-Shipped {
+            background: #b3e5fc;
+            /* neutral color instead of green */
+            color: #155724;
+        }
+
+        /* Current status badge - green and pulsating */
+        .status-current {
+            background: #4caf50;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.07);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .status-Delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-Cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Search Input */
+        #orderSearch:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .timeline-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .timeline-step::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #ccc;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 5px;
+        }
+
+        .timeline-step.completed::before {
+            background: #999;
+        }
+
+        .timeline-step.active::before {
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-step span {
+            color: #555;
+        }
+
+        .timeline-step.completed span {
+            font-weight: bold;
+            color: #999;
+        }
+
+        .timeline-step.active span {
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .items-list ul {
+            padding-left: 20px;
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header-bar">
+            <a href="crochet_products.html" class="back-btn">← Back to Shop</a>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <h1>My Order History</h1>
+
+        <div id="loading" style="text-align:center;">Loading your orders...</div>
+        <div id="ordersList"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://ggqbvmssddvskxunwlis.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncWJ2bXNzZGR2c2t4dW53bGlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwOTAzODUsImV4cCI6MjA4MDY2NjM4NX0.-MkxoSsER65PpKWfPhXazacTd_hhUY1Hr-kzyG-4fbQ';
+        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function checkAuth() {
+            const { data: { session } } = await client.auth.getSession();
+            if (!session) {
+                window.location.href = "login.html";
+                return;
+            }
+            fetchOrders(session.user.id);
+        }
+
+        async function fetchOrders(userId) {
+            const { data, error } = await client
+            .from('orders')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+
+            document.getElementById('loading').style.display = 'none';
+
+
+
+            // Helper: delivery charge based on pincode
+            window.getDeliveryCharge = function (pincode) {
+            if (!pincode) return 80; // Default
+
+            const pin = pincode.toString().substring(0, 3);
+
+            // Special rate for 689xxx
+            if (pin === '689') {
+            return 20;
+            }
+
+            // Kerala pincodes (670-699)
+            const keralaPins = ['670', '671', '672', '673', '674', '675', '676', '677', '678', '679',
+            '680', '681', '682', '683', '684', '685', '686', '687', '688', '690',
+            '691', '692', '693', '694', '695', '696', '697', '698', '699'];
+
+            if (keralaPins.includes(pin)) {
+            return 80; // Kerala
+            } else {
+            return 120; // Outside Kerala
+            }
+            };
+
+            // Reorder placeholder
+            window.reorder = function (orderId) {
+            alert('Reorder functionality coming soon! Order ID: ' + orderId);
+            // Here you would fetch the order details and add items to the cart.
+            };
+
+            if (error) {
+            document.getElementById('ordersList').innerHTML = `<p style="color:red; text-align:center;">Error:
+                ${error.message}</p>`;
+            return;
+            }
+
+            if (!data || data.length === 0) {
+            document.getElementById('ordersList').innerHTML = `<p style="text-align:center; color:#777;">You haven't
+                placed any orders yet.</p>`;
+            return;
+            }
+
+            const container = document.getElementById('ordersList');
+            container.innerHTML = "";
+
+            data.forEach(order => {
+            const date = new Date(order.created_at).toLocaleDateString();
+            const status = order.status || 'Pending';
+
+
+
+
+            const deliveryCharge = getDeliveryCharge(order.customer_pincode);
+            const itemRows = order.items.map(i => {
+            const price = i.price || 0;
+            const subtotal = price * i.quantity;
+            return `<li>${i.name} x ${i.quantity} — ₹${price} each = ₹${subtotal}</li>`;
+            }).join('');
+            const itemsHtml = `<ul>${itemRows}</ul>`;
+
+            // Extract display status (remove reference IDs)
+            let displayStatus = status;
+            if (status.includes('Placed')) {
+            displayStatus = 'Placed';
+            } else if (status.includes('Verified') && !status.includes('Verification')) {
+            displayStatus = 'Verified';
+            } else if (status.includes('Payment Verification Pending')) {
+            displayStatus = 'Verification Pending';
+            } else if (status.includes('Under Preparation')) {
+            displayStatus = 'Under Preparation';
+            } else if (status.includes('Shipped')) {
+            displayStatus = 'Shipped';
+            } else if (status.includes('Delivered')) {
+            displayStatus = 'Delivered';
+            } else if (status.includes('Cancelled')) {
+            displayStatus = 'Cancelled';
+            } else if (status.includes('Paid')) {
+            displayStatus = 'Verified';
+            }
+
+            // Timeline logic: determine which step is active
+            let placedClass = '', verifiedClass = '', prepClass = '', shippedClass = '', deliveredClass = '';
+            if (status.includes('Delivered')) {
+            placedClass = verifiedClass = prepClass = shippedClass = 'completed';
+            deliveredClass = 'active';
+            } else if (status.includes('Shipped')) {
+            placedClass = verifiedClass = prepClass = 'completed';
+            shippedClass = 'active';
+            } else if (status.includes('Under Preparation')) {
+            placedClass = verifiedClass = 'completed';
+            prepClass = 'active';
+            } else if (status.includes('Verified')) {
+            placedClass = 'completed';
+            verifiedClass = 'active';
+            } else if (status.includes('Placed') || status.includes('Pending')) {
+            placedClass = 'active';
+            } else {
+            placedClass = 'active';
+            }
+            const timelineHtml = `
+            <div class="timeline">
+                <div class="timeline-step ${placedClass}"><span>Placed</span></div>
+                <div class="timeline-step ${verifiedClass}"><span>Verified</span></div>
+                <div class="timeline-step ${prepClass}"><span>Prep</span></div>
+                <div class="timeline-step ${shippedClass}"><span>Shipped</span></div>
+                <div class="timeline-step ${deliveredClass}"><span>Delivered</span></div>
+            </div>`;
+            const html = `
+            <div class="order-card" data-order-id="${order.id}">
+                <!-- Header Section -->
+                <div class="order-header">
+                    <div>
+                        <div style="font-size: 14px; color: #d4af37; font-weight: 600; margin-bottom: 5px;">Order
+                            #${order.id}</div>
+                        <strong style="font-size:16px;">Order Placed: ${date}</strong>
+                    </div>
+                    <span class="status-badge status-${displayStatus.replace(/\s/g, '')}">${displayStatus}</span>
+                </div>
+
+                <!-- Order Progress Timeline -->
+                ${timelineHtml}
+
+                <!-- Divider -->
+                <div style="border-top:1px solid #eee; margin:15px 0;"></div>
+
+                <!-- Delivery Information Section -->
+                <div style="background:#f9f9f9; padding:12px; border-radius:8px; margin-bottom:15px;">
+                    <div style="font-weight:bold; font-size:13px; color:#3b2b22; margin-bottom:6px;">📦 Delivery Address
+                    </div>
+                    <div style="font-size:13px; color:#555; line-height:1.5;">
+                        ${order.customer_address}<br>
+                        PIN: ${order.customer_pincode}
+                    </div>
+                </div>
+
+                <!-- Items Section -->
+                <div style="margin-bottom:15px;">
+                    <div
+                        style="font-weight:bold; font-size:14px; color:#3b2b22; margin-bottom:10px; border-bottom:2px solid #f1e2d6; padding-bottom:5px;">
+                        Order Items</div>
+                    <div style="background:#fafafa; padding:12px; border-radius:8px;">
+                        ${itemsHtml}
+                    </div>
+                </div>
+
+                <!-- Pricing Summary Section -->
+                <div
+                    style="background:#fff8f3; border:2px solid #f1e2d6; border-radius:8px; padding:15px; margin-bottom:15px;">
+                    <div style="font-weight:bold; font-size:14px; color:#3b2b22; margin-bottom:10px;">Bill Summary</div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                        <span>Subtotal:</span>
+                        <span>₹${order.total}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
+                        <span>Delivery Charge:</span>
+                        <span>₹${deliveryCharge}</span>
+                    </div>
+                    <div style="border-top:1px solid #e0d0c0; margin:8px 0; padding-top:8px;"></div>
+                    <div
+                        style="display:flex; justify-content:space-between; font-weight:bold; font-size:16px; color:#d4af37;">
+                        <span>Total Amount:</span>
+                        <span>₹${order.total + deliveryCharge}</span>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="reorder(${order.id})"
+                    style="width:100%; padding:10px; background:#27ae60; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; font-size:14px; transition:0.3s;">
+                    🔄 Reorder These Items
+                </button>
+            </div>
+            `;
+            container.innerHTML += html;
+            });
+            }
+
+            // Search orders by Order ID
+            function searchOrders() {
+            const searchValue = document.getElementById('orderSearch').value.toLowerCase();
+            const orderCards = document.querySelectorAll('.order-card');
+
+            orderCards.forEach(card => {
+            const orderId = card.getAttribute('data-order-id');
+            if (orderId.toLowerCase().includes(searchValue)) {
+            card.style.display = 'block';
+            } else {
+            card.style.display = 'none';
+            }
+            });
+            }
+
+            async function logout() {
+            await client.auth.signOut();
+            window.location.href = "login.html";
+            }
+
+            checkAuth();
+            </script>
+
+            <!-- Footer -->
+            <div id="footer-container"></div>
+            <script>
+                fetch('components/footer.html')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('footer-container').innerHTML = data;
+                    });
+            </script>
+
+</body>
+
+</html>
