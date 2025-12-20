@@ -418,8 +418,7 @@
         const container = document.getElementById("products");
         container.innerHTML = "";
 
-        const limited = data.slice(0, 6);
-        limited.forEach(p => {
+        data.forEach(p => {
           container.innerHTML += `
         <div class="product">
           <img src="${p.image}" alt="${p.name}" loading="lazy">
