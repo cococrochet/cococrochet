@@ -487,11 +487,20 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdncWJ2bXNzZGR2c2t4dW53bGlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwOTAzODUsImV4cCI6MjA4MDY2NjM4NX0.-MkxoSsER65PpKWfPhXazacTd_hhUY1Hr-kzyG-4fbQ';
         const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // Authorized admin emails
+        const ADMIN_EMAILS = ['ashwinparun@gmail.com'];
+
         // Check if logged in on load
         async function checkSession() {
             const { data: { session } } = await client.auth.getSession();
             if (session) {
-                showDashboard(session.user);
+                if (ADMIN_EMAILS.includes(session.user.email)) {
+                    showDashboard(session.user);
+                } else {
+                    alert("Unauthorized access. Admin dashboard is restricted.");
+                    await client.auth.signOut();
+                    window.location.href = "login.html";
+                }
             } else {
                 document.getElementById('loginScreen').style.display = 'block';
                 document.getElementById('dashboard').style.display = 'none';
@@ -520,6 +529,13 @@
             if (error) {
                 errorMsg.textContent = error.message;
                 errorMsg.style.display = 'block';
+                return;
+            }
+
+            if (!ADMIN_EMAILS.includes(data.user.email)) {
+                errorMsg.textContent = "You do not have admin privileges.";
+                errorMsg.style.display = 'block';
+                await client.auth.signOut();
                 return;
             }
 
